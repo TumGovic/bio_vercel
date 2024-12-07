@@ -58,6 +58,8 @@ export default function Home() {
   useEffect(() => {
     setLoaded(true)
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     const handleKeyPress = (event) => {
       if (event.key === 'Enter' && !isTransitioning) {
         setIsTransitioning(true);

@@ -1,7 +1,7 @@
 'use client'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-import { Github, MessageCircle, Send, Twitter } from 'lucide-react'
+import { Github, Send, Twitter } from 'lucide-react'
 import avatar from './avatar.png'
 import Transition from './Transition'
 
@@ -12,7 +12,7 @@ const AnimatedNumber = ({ value }: { value: number }) => {
     let start = 0
     const end = parseInt(value.toString(), 10)
     const duration = 2000
-    let timer = setInterval(() => {
+    const timer = setInterval(() => {
       start += 1
       setCount(start)
       if (start === end) clearInterval(timer)
@@ -52,7 +52,7 @@ const ProgressBar = ({ value, max, name }: { value: number; max: number; name: s
 }
 
 export default function Home() {
-  const [loaded, setLoaded] = useState(false)
+  const [, setLoaded] = useState(false)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   useEffect(() => {

@@ -1,101 +1,174 @@
-import Image from "next/image";
+'use client'
+import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+import { Github, MessageCircle, Send, Twitter } from 'lucide-react'
+import avatar from './avatar.png'
+import Transition from './Transition'
+
+const AnimatedNumber = ({ value }: { value: number }) => {
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    let start = 0
+    const end = parseInt(value.toString(), 10)
+    const duration = 2000
+    let timer = setInterval(() => {
+      start += 1
+      setCount(start)
+      if (start === end) clearInterval(timer)
+    }, duration / end)
+
+    return () => clearInterval(timer)
+  }, [value])
+
+  return <span>{count.toLocaleString()}</span>
+}
+
+const ProgressBar = ({ value, max, name }: { value: number; max: number; name: string }) => {
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setProgress((value / max) * 100)
+    }, 500)
+
+    return () => clearTimeout(timer)
+  }, [value, max])
+
+  return (
+      <div className="relative w-full">
+        <div className="flex justify-between mb-1">
+          <span className="text-xs hover-animation">{name}</span>
+          <span className="text-xs hover-animation">{value}%</span>
+        </div>
+        <div className="w-full bg-green-900/30 rounded-full h-2.5">
+          <div
+              className="bg-green-500 h-2.5 rounded-full transition-all duration-1000 ease-out"
+              style={{ width: `${progress}%` }}
+          ></div>
+        </div>
+      </div>
+  )
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [loaded, setLoaded] = useState(false)
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    setLoaded(true)
+
+    const handleKeyPress = (event) => {
+      if (event.key === 'Enter' && !isTransitioning) {
+        setIsTransitioning(true);
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [isTransitioning])
+
+  const handleTransitionComplete = () => {
+    window.location.href = 'https://www.youtube.com/watch?v=xvFZjo5PgG0';
+  }
+
+  return (
+      <>
+        <div className="min-h-screen bg-black text-green-500 font-game p-4 overflow-hidden">
+          <div className="terminal-overlay"></div>
+          <div className="max-w-3xl mx-auto">
+            <header className="mb-8">
+              <h1 className="text-2xl font-bold glitch" data-text="TumGov">TumGov</h1>
+              <p className="text-sm mt-2 typewriter">НЕДОКОДЕР НА СТЕРОЙДАХ</p>
+            </header>
+
+            <main className="space-y-6">
+              <section className="flex items-center space-x-4">
+                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-green-500 glow">
+                  <Image
+                      src={avatar}
+                      alt="TumGov"
+                      className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold hover-animation">Александр</h2>
+                  <p className="text-sm hover-animation">Возраст: 14</p>
+                  <p className="text-sm hover-animation">Опыт использования нейросетей: 99%</p>
+                </div>
+              </section>
+
+              <section>
+                <h3 className="text-lg font-bold mb-2 hover-animation">About Me</h3>
+                <p className="text-sm hover-animation">
+                  Привет, хакеры! Я нейрокиборг, ваш проводник в мир нейронных сетей! Когда я не прокачиваю ИИ-модели или не ковыряюсь в старинном железе, я тресусь от конвульсий сидя за электронно-лучевыми мониторами. Учу много языков и развиваюсь в целом, я не ограничен программированием, я ограничен ограниченными возможностями 😁😁😁
+                </p>
+              </section>
+
+              <section>
+                <h3 className="text-lg font-bold mb-2 hover-animation">Успехи</h3>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div className="stat-box">
+                    <span className="stat-label hover-animation">Потрачено часов с нейронками:</span>
+                    <span className="stat-value"><AnimatedNumber value={9999} /></span>
+                  </div>
+                  <div className="stat-box">
+                    <span className="stat-label hover-animation">Количество нервных срывов:</span>
+                    <span className="stat-value"><AnimatedNumber value={1337} /></span>
+                  </div>
+                  <div className="stat-box">
+                    <span className="stat-label hover-animation">Выпито кофе:</span>
+                    <span className="stat-value" style={{ fontSize: '200%', marginTop: '-0.2em' }}>∞</span>
+                  </div>
+                  <div className="stat-box">
+                    <span className="stat-label hover-animation">Количество проёбаных часов:</span>
+                    <span className="stat-value"><AnimatedNumber value={42000} /></span>
+                  </div>
+                </div>
+              </section>
+
+              <section>
+                <h3 className="text-lg font-bold mb-4 hover-animation">Умения</h3>
+                <div className="grid grid-cols-1 gap-4 text-sm">
+                  {[
+                    { name: 'Страдать хуйнёй', level: 100 },
+                    { name: 'Пользоваться нейронками', level: 99 },
+                    { name: 'Писать треки', level: 90 },
+                    { name: 'Анализировать', level: 90 },
+                    { name: 'Кодить самостоятельно', level: 5 },
+                    { name: 'Думать', level: 0.01 }
+                  ].map((skill) => (
+                      <ProgressBar
+                          key={skill.name}
+                          name={skill.name}
+                          value={skill.level}
+                          max={100}
+                      />
+                  ))}
+                </div>
+              </section>
+
+              <section>
+                <h3 className="text-lg font-bold mb-2 hover-animation">Связь</h3>
+                <div className="flex space-x-4">
+                  <a href="https://t.me/TumaG0v" className="contact-icon hover-animation" aria-label="Telegram"><Send size={16} /></a>
+                  <a href="https://github.com/TumGovic1" className="contact-icon hover-animation" aria-label="Github"><Github size={16} /></a>
+                  <a href="https://x.com/TumGovic" className="contact-icon hover-animation" aria-label="X"><Twitter size={16} /></a>
+                </div>
+              </section>
+            </main>
+
+            <footer className="mt-8 text-center">
+              <p className="text-sm blink hover-animation">Press Enter to Continue...</p>
+            </footer>
+          </div>
+
+          {isTransitioning && (
+              <Transition onComplete={handleTransitionComplete} />
+          )}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </>
   );
 }
